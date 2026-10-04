@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="HY300">
+<meta name="theme-color" content="#0f1115">
+<title>HY300 Kumanda</title>
+<style>
+:root{--bg:#0f1115;--card:#171a21;--key:#222733;--key2:#2e3442;--txt:#eef0f4;--dim:#8b92a0;--acc:#3d8bfd;--red:#e5484d;--ok:#30a46c}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--bg);color:var(--txt);font:17px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+body{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;touch-action:manipulation}
+main{max-width:440px;margin:0 auto;padding:calc(env(safe-area-inset-top) + 12px) 16px calc(env(safe-area-inset-bottom) + 20px);display:flex;flex-direction:column;gap:12px}
+header{display:flex;align-items:center;justify-content:space-between;gap:12px}
+h1{font-size:18px;margin:0;font-weight:600;display:flex;align-items:center;gap:8px}
+#dot{width:10px;height:10px;border-radius:50%;background:var(--dim)}
+#dot.on{background:var(--ok)}#dot.off{background:var(--red)}
+#banner{display:none;background:#3a1d20;color:#ffb4b6;border-radius:12px;padding:10px 12px;font-size:14px;line-height:1.35}
+.k{border:0;background:var(--key);color:var(--txt);font:inherit;border-radius:16px;min-height:56px;padding:0 8px;transition:transform .06s,background .06s}
+.k:active,.k.pr{background:var(--key2);transform:scale(.96)}
+.k:disabled{opacity:.3}
+.pw{min-height:40px;padding:0 16px;background:var(--red);color:#fff;font-size:15px;border-radius:12px}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.pad{background:var(--card);border-radius:24px;padding:12px;display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(3,72px);gap:12px}
+.pad .k{font-size:22px;min-height:0}
+.pad .ok{border-radius:50%;font-weight:600;font-size:18px}
+.pad .ok.pr{background:var(--acc)}
+#tp{position:relative;background:var(--card);border-radius:24px;aspect-ratio:16/9;touch-action:none;display:flex;align-items:center;justify-content:center;color:var(--dim);font-size:15px;overflow:hidden}
+#tp i{position:absolute;width:28px;height:28px;margin:-14px 0 0 -14px;border-radius:50%;background:var(--acc);opacity:0;pointer-events:none;transition:opacity .3s}
+.tx{display:flex;gap:12px}
+.tx input{flex:1;min-width:0;background:var(--card);border:1px solid var(--key2);color:var(--txt);border-radius:16px;padding:0 16px;font:inherit;min-height:56px;-webkit-user-select:text;user-select:text}
+.tx .k{padding:0 18px}
+small{color:var(--dim);font-size:13px;line-height:1.4}
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <h1><span id="dot"></span>HY300</h1>
+    <button class="k pw" data-k="guc">Güç</button>
+  </header>
+  <div id="banner"></div>
+
+  <div class="g3">
+    <button class="k" data-k="geri">Geri</button>
+    <button class="k" data-k="ana_ekran">Ana ekran</button>
+    <button class="k" data-k="menu">Menü</button>
+  </div>
+
+  <div class="pad">
+    <span></span><button class="k" data-k="yukari" data-rep aria-label="Yukarı">▲</button><span></span>
+    <button class="k" data-k="sol" data-rep aria-label="Sol">◀</button>
+    <button class="k ok" data-k="ok">OK</button>
+    <button class="k" data-k="sag" data-rep aria-label="Sağ">▶</button>
+    <span></span><button class="k" data-k="asagi" data-rep aria-label="Aşağı">▼</button><span></span>
+  </div>
+
+  <div class="g3">
+    <button class="k" data-k="ses_azalt" data-rep>Ses –</button>
+    <button class="k" data-k="sessiz">Sessiz</button>
+    <button class="k" data-k="ses_artir" data-rep>Ses +</button>
+  </div>
+
+  <div id="tp">Fare alanı · sürükle, dokun = tıkla<i></i></div>
+
+  <form class="tx" id="txf">
+    <input id="tx" placeholder="Yazı gönder" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" enterkeyhint="send">
+    <button class="k" type="submit">Gönder</button>
+  </form>
+
+  <div class="g3">
+    <button class="k" data-k="sil" data-rep>Sil</button>
+    <button class="k" data-k="enter">Enter</button>
+    <button class="k" data-k="oynat_dur">Oynat/Dur</button>
+  </div>
+
+  <div class="g3">
+    <button class="k" data-a="stremio">Stremio</button>
+    <button class="k" data-a="youtube">YouTube</button>
+    <button class="k" data-a="ayarlar">Ayarlar</button>
+  </div>
+
+  <small>Projeksiyon yeniden başlatılırsa bilgisayardaki kumanda kendiliğinden tekrar bağlanır; bilgisayar ve kumanda programı açık kalmalı.</small>
+</main>
+<script>
+var dot = document.getElementById("dot"), banner = document.getElementById("banner");
+
+function post(path, body) {
+  return fetch(path, {method: "POST", headers: {"Content-Type": "application/json"},
+                      body: JSON.stringify(body), cache: "no-store"})
+    .then(function (r) { return r.json(); })
+    .then(function (d) { show(d.connected); return d; })
+    .catch(function () { show(null); return {}; });
+}
+
+function show(connected, unauthorized) {
+  dot.className = connected ? "on" : "off";
+  if (connected) { banner.style.display = "none"; return; }
+  banner.style.display = "block";
+  banner.textContent = connected === null
+    ? "Bilgisayardaki kumanda programına ulaşılamıyor. Program açık mı, telefon aynı Wi-Fi'de mi?"
+    : unauthorized
+      ? "Projeksiyonda çıkan \"USB hata ayıklamaya izin ver\" penceresini onaylayın (\"Her zaman izin ver\" işaretli)."
+      : "Projeksiyona bağlanılıyor… Projeksiyon açık ve aynı ağda olmalı.";
+}
+
+function status() {
+  fetch("/api/status", {cache: "no-store"}).then(function (r) { return r.json(); }).then(function (s) {
+    show(s.connected, s.unauthorized);
+    document.querySelectorAll("[data-a]").forEach(function (b) {
+      var a = b.dataset.a;
+      b.disabled = a !== "ayarlar" && s.connected && !s.apps[a];
+    });
+  }).catch(function () { show(null); });
+}
+status(); setInterval(status, 4000);
+
+// Tuşlar (yön, ses ve Sil basılı tutunca tekrar eder)
+document.querySelectorAll("[data-k]").forEach(function (b) {
+  var t1, t2;
+  function stop() { clearTimeout(t1); clearInterval(t2); b.classList.remove("pr"); }
+  b.addEventListener("pointerdown", function (e) {
+    e.preventDefault();
+    b.classList.add("pr");
+    post("/api/key", {k: b.dataset.k});
+    if (b.hasAttribute("data-rep"))
+      t1 = setTimeout(function () { t2 = setInterval(function () { post("/api/key", {k: b.dataset.k}); }, 180); }, 450);
+  });
+  ["pointerup", "pointercancel", "pointerleave"].forEach(function (ev) { b.addEventListener(ev, stop); });
+  b.addEventListener("contextmenu", function (e) { e.preventDefault(); });
+});
+
+document.querySelectorAll("[data-a]").forEach(function (b) {
+  b.addEventListener("click", function () { post("/api/app", {a: b.dataset.a}); });
+});
+
+// Fare alanı: alan projeksiyon ekranına birebir karşılık gelir
+var tp = document.getElementById("tp"), mark = tp.querySelector("i"), st = null;
+function rel(e) {
+  var r = tp.getBoundingClientRect();
+  return {x: (e.clientX - r.left) / r.width, y: (e.clientY - r.top) / r.height, px: e.clientX, py: e.clientY};
+}
+function flash(p) {
+  mark.style.left = (p.x * 100) + "%"; mark.style.top = (p.y * 100) + "%";
+  mark.style.transition = "none"; mark.style.opacity = ".9";
+  requestAnimationFrame(function () { mark.style.transition = "opacity .4s"; mark.style.opacity = "0"; });
+}
+tp.addEventListener("pointerdown", function (e) {
+  e.preventDefault(); tp.setPointerCapture(e.pointerId);
+  st = rel(e); st.t = Date.now();
+});
+tp.addEventListener("pointerup", function (e) {
+  if (!st) return;
+  var p = rel(e), dt = Date.now() - st.t, moved = Math.hypot(p.px - st.px, p.py - st.py);
+  if (moved < 12) post("/api/tap", {x: st.x, y: st.y});
+  else post("/api/swipe", {x1: st.x, y1: st.y, x2: p.x, y2: p.y, ms: dt});
+  flash(moved < 12 ? st : p);
+  st = null;
+});
+tp.addEventListener("pointercancel", function () { st = null; });
+
+// Yazı gönder
+var tx = document.getElementById("tx");
+document.getElementById("txf").addEventListener("submit", function (e) {
+  e.preventDefault();
+  if (!tx.value) return;
+  post("/api/text", {t: tx.value});
+  tx.value = "";
+});
+</script>
+</body>
+</html>
