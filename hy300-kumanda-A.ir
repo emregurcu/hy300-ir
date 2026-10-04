@@ -1,0 +1,92 @@
+Filetype: IR signals file
+Version: 1
+#
+name: Yukari
+type: parsed
+protocol: NEC
+address: 01 00 00 00
+command: 16 00 00 00
+#
+name: Asagi
+type: parsed
+protocol: NEC
+address: 01 00 00 00
+command: 1A 00 00 00
+#
+name: Sol
+type: parsed
+protocol: NEC
+address: 01 00 00 00
+command: 51 00 00 00
+#
+name: Sag
+type: parsed
+protocol: NEC
+address: 01 00 00 00
+command: 50 00 00 00
+#
+name: OK
+type: parsed
+protocol: NEC
+address: 01 00 00 00
+command: 13 00 00 00
+#
+name: Geri
+type: parsed
+protocol: NEC
+address: 01 00 00 00
+command: 19 00 00 00
+#
+name: Ana_ekran
+type: parsed
+protocol: NEC
+address: 01 00 00 00
+command: 11 00 00 00
+#
+name: Ayarlar
+type: parsed
+protocol: NEC
+address: 01 00 00 00
+command: 43 00 00 00
+#
+name: Secenek
+type: parsed
+protocol: NEC
+address: 01 00 00 00
+command: 4C 00 00 00
+#
+name: Fare
+type: parsed
+protocol: NEC
+address: 01 00 00 00
+command: 00 00 00 00
+#
+name: Kaynak
+type: parsed
+protocol: NEC
+address: 01 00 00 00
+command: 0F 00 00 00
+#
+name: Ses_azalt
+type: parsed
+protocol: NEC
+address: 01 00 00 00
+command: 10 00 00 00
+#
+name: Ses_artir
+type: parsed
+protocol: NEC
+address: 01 00 00 00
+command: 18 00 00 00
+#
+name: Sessiz
+type: parsed
+protocol: NEC
+address: 01 00 00 00
+command: 41 00 00 00
+#
+name: Guc
+type: parsed
+protocol: NEC
+address: 01 00 00 00
+command: 40 00 00 00
